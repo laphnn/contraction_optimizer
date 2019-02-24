@@ -8,16 +8,16 @@ The only requirement is a modern C++ compiler providing the usual STL containers
 The optimization performed here can reduce the computational complexity by an order of magnitude or more.
 
 **Example: Evaluating four nucleon-nucleon correlators**
-| 	   | Ndil^2 | Ndil^3| Ndil^4|
-| -------- |:------:| -----:| -----:|
-| w/o CSE  | 12,992 | 3,584 | 25,984|
-| w   CSE  | 2,352  |   64  | 1,080 |
+|          | Ndil^2 | Ndil^3 | Ndil^4 |
+| -------- | ------ | ------ | -----  |
+| w/o CSE  | 12,992 | 3,584  | 25,984 |
+| w   CSE  | 2,352  |   64   | 1,080  |
 
 **Example: Evaluating an I=3 three-pion correlator**
-| 	   | Ndil^2 | Ndil^3|
-| -------- |:------:| -----:|
-| w/o CSE  | 47,520 | 60,480|
-| w   CSE  | 450    |    360|
+|          | Ndil^2 | Ndil^3 |
+| -------- |------- | ------ |
+| w/o CSE  | 47,520 | 60,480 |
+| w   CSE  | 450    |    360 |
 
 In those examples the number of computationally dominant contractions with complexity `Ndil^4` have been reduced by factors of 24 and 168 respectively.
 
