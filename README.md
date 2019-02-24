@@ -2,18 +2,20 @@
 Code to perform operation count minimization for the evaluation of a large number of tensor contractions. A possible application is the efficient evaluation of correlation functions in lattice QCD calculations, and lattice-QCD terminology is used in the following.
 
 ## Installation
-The only requirement is a modern C++ compiler providing the usual STL containers. The sample `build.sh` file compiles the data structures as well as a sample driver routine, which optimizes the [last example described in the algorithm section](#between-diagram_optimization).
+The only requirement is a modern C++ compiler providing the usual STL containers. The sample `build.sh` file compiles the data structures as well as a sample driver routine, which optimizes the [last example described in the algorithm section](#between-diagram-optimization).
 
 ## Benchmarks
 The optimization performed here can reduce the computational complexity by an order of magnitude or more.
 
 **Example: Evaluating four nucleon-nucleon correlators**
+
 | Mode     | Ndil^2 | Ndil^3 | Ndil^4 |
 | -------- | -----: | -----: | ----:  |
 | w/o CSE  | 12,992 | 3,584  | 25,984 |
 | w   CSE  | 2,352  |   64   | 1,080  |
 
 **Example: Evaluating an I=3 three-pion correlator**
+
 | Mode     | Ndil^2 | Ndil^3 |
 | -------- |------: | -----: |
 | w/o CSE  | 47,520 | 60,480 |
