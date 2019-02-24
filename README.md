@@ -21,7 +21,7 @@ The optimization performed here can reduce the computational complexity by an or
 | w/o CSE  | 47,520 | 60,480 |
 | w   CSE  | 450    |    360 |
 
-In those examples the number of computationally dominant contractions with complexity `Ndil^4` have been reduced by factors of 24 and 168 respectively.
+In those examples the number of computationally dominant contractions have been reduced by factors of 24 and 168 respectively.
 
 ## Data Structures
 ### Graph
