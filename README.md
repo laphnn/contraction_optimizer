@@ -33,7 +33,7 @@ map<pair<uint, uint>, set<pair<uint, uint>>> contrList;
 contrList[pair(0,0)] = { {0,0}, {1,1} };
 auto aGraph = Graph(contrList);
 ```
-or equivalently, using initializer lists for more a more compact notation,
+or equivalently, using initializer lists for a more compact notation,
 ```
 auto aGraph = Graph({ {{0,1}, {{0,0}, {1,1}}} });
 ```
