@@ -106,3 +106,21 @@ The tie between the two locally optimal steps in the first diagram is broken by 
 * `Graph` does not support internal loops, i.e. reductions on just a single tensor. Those are assumed to be taken care of elsewhere, e.g. tetraquark internal loops are computed elsewhere and the result is a tensor of rank less than four. The `ContractionOptimizer` will never produce internal loops, even though that means missing out on some optimizations at lower orders of `Ndil` -- however the algorithm always yields the optimal path at the dominant order in `Ndil`.
 * The index range `Ndil` is assumed to be the same everywhere.
 * Due to the way the contractions are stored in bit arrays, the maximum rank of tensors that can be dealt with is `2^3-1=7`. The maximal number of tensors that can occur in one diagram (or graph rather) is `2^4 = 16`.
+
+## Copyright Notice
+
+Contraction Optimizer v1.0 Copyright (c) 2019, The Regents of the
+University of California, through Lawrence Berkeley National Laboratory
+(subject to receipt of any required approvals from the U.S. Dept. of
+Energy). All rights reserved.
+
+If you have questions about your rights to use or distribute this software,
+please contact Berkeley Lab's Intellectual Property Office at IPO@lbl.gov.
+
+NOTICE. This Software was developed under funding from the U.S. Department
+of Energy and the U.S. Government consequently retains certain rights. As
+such, the U.S. Government has been granted for itself and others acting on
+its behalf a paid-up, nonexclusive, irrevocable, worldwide license in the
+Software to reproduce, distribute copies to the public, prepare derivative
+works, and perform publicly and display publicly, and to permit other to do
+so.
