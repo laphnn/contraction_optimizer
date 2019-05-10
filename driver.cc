@@ -33,7 +33,7 @@ int main() {
 		  {{1,2}, {{0,2}}},
 		  {{0,3}, {{2,0}}},
 	  });
-  std::list<Diagram> diagList;
+  std::vector<Diagram> diagList;
   diagList.push_back(Diagram(graph1, {0,1,2,3}));
   diagList.push_back(Diagram(graph2, {0,1,2,4}));
 

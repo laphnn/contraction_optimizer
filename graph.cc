@@ -114,6 +114,25 @@ using namespace std;
     return ret;
   }
 
+
+    // indMap[oldIndex] = newIndex
+  void Graph::relabelTensors(const std::vector<uint>& indMap) {
+#ifdef SAFETY_FLAG
+    if (indMap.size() != getTensorIDSet().size()) {
+      throw(std::invalid_argument("Index mapping does not match tensors"));
+    }
+#endif
+
+    for (auto& mIt : icode) {
+      uint newC = mIt & 0xffffff00u;
+      newC |= indMap[(mIt >> 4) & 0xf] << 4;
+      newC |= indMap[mIt & 0xf];
+      mIt = canonicalize(newC);
+    }
+
+    std::sort(icode.begin(), icode.end());
+  }
+
   void Graph::encode(const std::map<iTup, std::set<iTup>>& contrList) {
     icode.clear();
 
@@ -128,24 +147,24 @@ using namespace std;
       aCode |= (mIt.first.first & 0xf) << 4;
       aCode |= mIt.first.second & 0xf;
 
-      icode.insert(canonicalize(aCode));
+      icode.push_back(canonicalize(aCode));
     }
+
+    std::sort(icode.begin(), icode.end());
   }
 
+#ifdef SAFETY_FLAG
   std::set<unsigned int> Graph::getTensorIDSet() const {
     std::set<unsigned int> retSet;
 
     for (auto mIt : icode) {
       retSet.insert(mIt & 0xf);
       retSet.insert((mIt >> 4) & 0xf);
-      //unsigned int aCode = mIt;
-
-      //unsigned int tens2 = mIt & 0xf;
-      //unsigned int tens1 = (mIt >> 4) & 0xf;
     }
 
     return retSet;
   }
+#endif
 
   std::set<iTup> Graph::decodeElement(unsigned int aC) {
     std::set<iTup> retSet;
@@ -163,8 +182,6 @@ using namespace std;
     contrList.clear();
 
     for (auto mIt : icode) {
-      //unsigned int aCode = mIt;
-
       unsigned int tens2 = mIt & 0xf;
       unsigned int tens1 = (mIt >> 4) & 0xf;
 
@@ -174,24 +191,6 @@ using namespace std;
     }
   }
 
-  /*void Graph::decode(map<iTup, std::set<iTup>>& contrList) const {
-    contrList.clear();
-
-    for (auto mIt : icode) {
-      //unsigned int aCode = mIt;
-
-      unsigned int tens2 = mIt & 0xf;
-      unsigned int tens1 = (mIt >> 4) & 0xf;
-
-      auto iIt = contrList.emplace(std::make_pair(tens1, tens2), std::set<iTup>()).first;
-
-      for (unsigned int cInd1 = 0; cInd1 < 7; ++cInd1) {
-	unsigned int cInd2 = (mIt >> (8+3*cInd1)) & 0x7;
-	if (cInd2 != 0) 
-	  iIt->second.insert(std::make_pair(cInd1, cInd2-1));
-      }
-    }
-  }*/
 
   unsigned int Graph::isSubexpression(
 		  const unsigned int aStep,
@@ -201,7 +200,7 @@ using namespace std;
     theStep |= tensPair.second & 0xf;
     theStep = canonicalize(theStep);
 
-    if (icode.find(theStep) != icode.end())
+    if (std::find(icode.begin(), icode.end(), theStep) != icode.end())
       return theStep;
     else
       return 0;

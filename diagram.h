@@ -4,7 +4,6 @@
 #include <map>
 #include <set>
 #include <vector>
-#include <list>
 #include <numeric>
 
 #include "graph.h"
@@ -15,8 +14,6 @@ class Diagram {
 
   private:
     Graph graph;
-      // need to erase elements from tensIdList all the time,
-      // so use list instead of vector
     std::vector<uint> tensIdList;
     std::vector<uint> resultIdList;
 
@@ -33,27 +30,29 @@ class Diagram {
     Graph getGraph() const { return graph; }
     bool isDone() const;
 
-    std::pair<uint, std::list<std::pair<uint, iTup>>> singleTermOpt() const;
+    std::pair<uint, std::vector<std::pair<uint, iTup>>> singleTermOpt() const;
     bool replaceSubexpression(uint graphStep,
       			      const std::pair<uint, uint>& globTensPair,
 			      uint newGlobTensID);
-    void getProfit(const uint graphStep,
+    bool getProfit(const uint graphStep,
 		   const iTup& globTensPair,
 		   ContractionCost& result);
 
-    //bool operator==(const Diagram& rhs) const {
-    //  return LE::multiEqual(graph, rhs.graph,
-    //      		    tensIdList, rhs.tensIdList);
-    //}
+    bool operator==(const Diagram& rhs) const {
+      return ((graph == rhs.graph) && (tensIdList == rhs.tensIdList));
+    }
 
-    //bool operator<(const Diagram& rhs) const {
-    //  return LE::multiLessThan(graph, rhs.graph,
-    //      		       tensIdList, rhs.tensIdList);
-    //}
+    bool operator<(const Diagram& rhs) const {
+      return ((graph < rhs.graph) ||
+	      (graph == rhs.graph && tensIdList < rhs.tensIdList));
+    }
+
+    void _sortTensorList();
 
   private:
     void _reorgTensIdList(const iTup& tensPair, uint newGlobId, bool subcDone);
     iTup _getGlobalTensPair(uint stepCode) const;
+    inline bool _getLocalTensorIDs(const std::pair<uint, uint>& globTensPair, iTup& res);
 
 };
 

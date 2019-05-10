@@ -22,7 +22,6 @@ class ContractionCost {
     ContractionCost& operator-=(const ContractionCost& rhs);
     ContractionCost& operator+=(const unsigned int& rhs);
     bool operator<(const ContractionCost& rhs) const;
-    //bool operator>(const ContractionCost& rhs) const { return rhs.operator<(*this); }
 
     std::vector<unsigned int> getCostArray() const { return store; }
 
@@ -38,16 +37,13 @@ class Graph
 {
 
   private:
-    std::set<unsigned int> icode;
+    std::vector<unsigned int> icode;
 
   public:
     Graph(const std::map<iTup, std::set<iTup>>& contrList);
-    Graph(const std::vector<unsigned int>& incode) {
-      for (auto iI : incode) icode.insert(iI);
-    }
-    //Graph(const Graph& in): contrList(in.contrList), tensList(in.tensList) {}
+    Graph(const std::vector<unsigned int>& _icode) : icode(_icode) {}
 
-    const std::set<unsigned int>& __hash__() const { return icode; }
+    const std::vector<unsigned int>& __hash__() const { return icode; }
     bool operator==(const Graph& rhs) const { return icode == rhs.icode; }
     bool operator<(const Graph& rhs) const { return icode < rhs.icode; }
 
@@ -58,14 +54,17 @@ class Graph
     std::map<iTup, std::set<iTup>> getContractionList() const;
     unsigned int getNumInds(unsigned int tensId) const;
     std::vector<unsigned int> getAllNumInds() const;
+#ifdef SAFETY_FLAG
     std::set<unsigned int> getTensorIDSet() const;
+#endif
 
     ContractionCost getRemainingCost() const;
     void getProfit(const uint replStep, ContractionCost& result) const;
 
     bool replaceSubexpression(uint graphStep);
-      // TODO turn this into static with graph passed in?
     void doReplacement(uint replStep) const;
+      // given a mapping oldTensId -> newTensId, relabel tensor IDs
+    void relabelTensors(const std::vector<uint>& indMap);
 
     static std::set<iTup> decodeElement(unsigned int aC);
 
@@ -87,7 +86,6 @@ class GraphFactory {
 
   private:
     std::map<iTup, std::set<iTup>> contrList;
-    //std::vector<Tensor> tensList;
 
   public:
 
