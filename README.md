@@ -37,7 +37,7 @@ or equivalently, using initializer lists for a more compact notation,
 ```
 auto aGraph = Graph({ {{0,1}, {{0,0}, {1,1}}} });
 ```
-Internally this information is encoded in bit arrays for performance. Internal loops of tensors are not assumed to be taken care of elsewhere and cannot be encoded in `Graph`.
+Internally this information is encoded in bit arrays for performance. Internal loops of tensors are assumed to be taken care of elsewhere and cannot be encoded in `Graph`.
 
 ### Diagram
 `Graph` objects store only the topology of contractions. A diagram is a graph together with a list of global tensor indices. This global tensor index is a compound index encompassing hadron type (spatial momentum, irreducible representation [*irrep* for short], irrep row), noise combination, time slice index etc. -- i.e. all characteristics required to uniquely identify a hadron function.
@@ -45,17 +45,17 @@ Internally this information is encoded in bit arrays for performance. Internal l
 **Example:** A meson correlator for a fixed time separation is given by an average over two noise combinations, each of which is encoded as an individual diagram,
 ```
 auto aGraph = Graph({ {{0,1}, {{0,0}, {1,1}}} });
-list<Diagram> diagList;
+vector<Diagram> diagList;
 diagList.push_back(Diagram(aGraph, {0,1});
 diagList.push_back(Diagram(aGraph, {2,3});
 ```
 
 ### ContractionOptimizer
-Given such a list of diagrams, `ContractionOptimizer` identifies opportunities for a reduction of computational complexity required to evaluate all diagrams by identifying re-usable subexpressions, [c.f. the algorithm section](#algorithm).
+Given such a vector of diagrams, `ContractionOptimizer` identifies opportunities for a reduction of computational complexity required to evaluate all diagrams by identifying re-usable subexpressions, [c.f. the algorithm section](#algorithm).
 
-A `ContractionOptimizer` is initialized with a large list of `Diagram`s. A subsequent call to `tune()` triggers the optimization routine, and upon completion the following information is accessible:
+A `ContractionOptimizer` is initialized with a large vector of `Diagram`s. A subsequent call to `tune()` triggers the optimization routine, and upon completion the following information is accessible:
 * `getCompStepList()` -- list of elemental pairwise tensor contractions to be performed in this order to achieve operation count reduction
-* `getDiagramList()` -- transformed list of diagrams (of same length as the original diagram list) storing the global result IDs for each diagram
+* `getDiagramList()` -- transformed vector of diagrams (of same length as the original diagram list) storing the global result IDs for each diagram
 * `getCSECost()` -- cost to perform all required contractions re-using intermediary expressions
 * `getNoCSECost()` -- same as above, but without re-use of intermediaries, so that the difference between the two is a measure of the achieved reduction of computational complexity
 
@@ -94,7 +94,7 @@ auto graph2 = Graph({
 		{{1,2}, {{0,2}}},
 		{{0,3}, {{2,0}}},
 	});
-list<Diagram> diagList;
+vector<Diagram> diagList;
 diagList.push_back(Diagram(graph1, {0,1,2,3}));
 diagList.push_back(Diagram(graph2, {0,1,2,4}));
 ```
